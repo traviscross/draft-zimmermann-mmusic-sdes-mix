@@ -54,19 +54,22 @@ There is a vulnerability when <xref target="RFC4568">SDES</xref> is used with SI
 There are two separate SRTP master keys and salts provided by SDES, one for each direction of media flow.  In SIP forking, only one SIP responder will answer the call with a SIP 200 OK, returning a different SDES key for SRTP media from the SIP responder.  The attacker does not have access to the SDES key from the 200 OK. </t>
 <t>
 To prevent the adversary from exploiting the SDES key captured from the SIP Invite, both parties may hash together both SDES parameters from both parties, and then use the combined hash result to re-derive new keys and salts to replace the original SDES material for both endpoints. </t>
+<t>
+We use the extract-and-expand construct defined in <xref target="RFC5869"/>. </t>
 
 <figure><artwork>
-  mixed_sdeskey = hash(srtpmsi || srtpmsr ||
-                       len(srtpmki) || srtpmki || 
-                       len(srtpmkr) || srtpmkr)
+  salt = srtpmsi || srtpmsr
+  ikm = len(srtpmki) || srtpmki || len(srtpmkr) || srtpmkr
+  prk = MAC(salt, ikm)
 
-  srtpmki2 = MAC(mixed_sdeskey, "srtpmki")
-  srtpmkr2 = MAC(mixed_sdeskey, "srtpmkr")
-  srtpmsi2 = MAC(mixed_sdeskey, "srtpmsi")
-  srtpmsr2 = MAC(mixed_sdeskey, "srtpmkr")
+  srtpmsi2 = MAC(prk, 0x01)
+  srtpmki2 = MAC(prk, srtpmsi2 || 0x02)
+  srtpmsr2 = MAC(prk, srtpmki2 || 0x03)
+  srtpmkr2 = MAC(prk, srtpmsr2 || 0x04)
+
 </artwork></figure>
 <t>
-In the above formula, the hash function is SHA-384, and the MAC function is HMAC-SHA-384, which is truncated to the appropriate length for each field, as explained below.  The parameters srtpmki and srtpmsi are extracted from the SDES transmitted by the SIP initiator, while srtpmkr and srtpmsr are extracted from the SDES transmitted by the SIP responder.  These keys and salts are in binary form, not the base64 representation used by SDES.  The explicit length fields, len(), in the above hash are 32-bit big-endian integers, giving the length in octets of the field that follows.  The length in octets of srtpmki or srtpmkr can only be 16, 24, or 32, if the AES is used.  srtpmki is the SIP initiator's SRTP master key, srtpmkr is the SIP responder's SRTP master key, srtpmsi is the SIP initiator's SRTP master salt, and srtpmsr is the SIP responder's SRTP master salt.  The length of the SRTP master salts are defined as 112 bits (14 octets) in <xref target="RFC3711"/>.  The old values for srtpmki, srtpmkr, srtpmsi, srtpmsr, are all respectively replaced by the new values srtpmki2, srtpmkr2, srtpmsi2, and srtpmsr2.  The MAC output is truncated to 14 octets for srtpmsi2 and srtpmsr2, and to the corresponding original key lengths for srtpmki2 and srtpmkr2. </t>
+In the above formula, the MAC function is defined as HMAC-SHA-384.  The output of the MAC will be truncated as described below.  The parameters srtpmki and srtpmsi are extracted from the SDES transmitted by the SIP initiator, while srtpmkr and srtpmsr are extracted from the SDES transmitted by the SIP responder.  These keys and salts are in binary form, not the base64 representation used by SDES.  The numeric constants are represented by a single octet.  The explicit length fields, len(), in the above functions are 32-bit big-endian integers, giving the length in octets of the field that follows.  The length in octets of srtpmki or srtpmkr can only be 16, 24, or 32, if the AES is used.  srtpmki is the SIP initiator's SRTP master key, srtpmkr is the SIP responder's SRTP master key, srtpmsi is the SIP initiator's SRTP master salt, and srtpmsr is the SIP responder's SRTP master salt.  The length of the SRTP master salts are defined as 112 bits (14 octets) in <xref target="RFC3711"/>.  The old values for srtpmki, srtpmkr, srtpmsi, srtpmsr, are all respectively replaced by the new values srtpmki2, srtpmkr2, srtpmsi2, and srtpmsr2.  The MAC output is truncated to 14 octets for srtpmsi2 and srtpmsr2, and to the corresponding original key lengths for srtpmki2 and srtpmkr2. </t>
 <t>
 The original crypto suite selected by SDES remains unchanged, including the block cipher algorithm, the key lengths, and the SRTP auth tag sizes and auth tag algorithms.  All keys should be erased immediately after use. </t>
 <t>
@@ -84,7 +87,7 @@ Before applying the above enhancements, the two SIP user agents discover if they
 <?rfc include="reference.RFC.3711" ?><!-- SRTP -->
 <!--<rfc include="reference.RFC.4566" />--><!-- SDP -->
 <?rfc include="reference.RFC.4568" ?><!-- SDES -->
-<!--<rfc include="reference.RFC.5869" />--><!-- HKDF -->
+<?rfc include="reference.RFC.5869" ?><!-- HKDF -->
 </references>
 
 <!--<references title="Informative References">-->

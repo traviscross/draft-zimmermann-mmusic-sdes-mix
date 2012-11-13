@@ -1,3 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE rfc SYSTEM "rfc2629.dtd">
+<?rfc compact="yes"?>
+<?rfc toc="yes"?>
+<?rfc tocdepth="5"?>
+<?rfc rfcedstyle="yes"?>
+<?rfc subcompact="no"?>
+<rfc ipr="trust200902" number="draft-sdesmix" category="info"
+  submissionType="IETF" consensus="yes">
+<front>
+<title abbrev="SDES Mix">Key Mixing Protocol Extension for Enhanced SDES Security</title>
+
+<author initials="P." surname="Zimmermann" fullname="Philip Zimmermann">
+<organization>Silent Circle, LLC</organization>
+<address>
+<postal>
+<street></street>
+<city>Santa Cruz</city><region>California</region>
+</postal>
+<email>prz@mit.edu</email>
+<uri>http://philzimmermann.com</uri>
+</address>
+</author>
+
+<author initials="T." surname="Cross" fullname="Travis Cross">
+<organization>OfficeTone, LLC</organization>
+<address>
+<email>tc@traviscross.com</email>
+<uri>http://traviscross.com</uri>
+</address>
+</author>
+
+<author initials="D." surname="Wing" fullname="Dan Wing">
+<organization>Cisco Systems, Inc.</organization>
+<address>
+<email>dwing@cisco.com</email>
+</address>
+</author>
+
+<date month="November" year="2012"/>
+
+<abstract>
+<t>
+This document defines a method by which endpoints using SDES can prevent attackers from using SIP forking to capture useful key material.  We define a Session Description Protocol (SDP) attribute for unicast media streams which can be used to negotiate this extension to SDES (RFC 4568). </t>
+</abstract>
+
+</front>
+
+<middle>
 <section anchor='enhanced_sdes' title="Enhanced SDES for SIP forking">
 <t>
 There is a vulnerability when <xref target="RFC4568">SDES</xref> is used with SIP forking.  In SIP forking, the SIP initiator sends separate SIP Invites to multiple SIP endpoints, each containing the same SDES key from the SIP initiator.  If an adversary is in possession of a target's SIP password and registers to become one of the SIP endpoints to receive the SIP Invite, the adversary will have the SDES key to decrypt the media stream from the SIP initiator, even if a different device responds to the SIP Invite.  Here we propose a method to mitigate this vulnerability. </t>
@@ -24,3 +73,32 @@ The original crypto suite selected by SDES remains unchanged, including the bloc
 Before applying the above enhancements, the two SIP user agents discover if they both support this extension to SDES by detecting the optional a=sdesmix SDP attribute from both endpoints. </t>
 
 </section>
+
+</middle>
+
+<back>
+<?rfc rfcedstyle="no" ?>
+<references title="Normative References">
+<!--<rfc include="reference.RFC.2104" />--><!-- HMAC -->
+<!--<rfc include="reference.RFC.2119" />--><!-- RFC Keywords -->
+<?rfc include="reference.RFC.3711" ?><!-- SRTP -->
+<!--<rfc include="reference.RFC.4566" />--><!-- SDP -->
+<?rfc include="reference.RFC.4568" ?><!-- SDES -->
+<!--<rfc include="reference.RFC.5869" />--><!-- HKDF -->
+</references>
+
+<!--<references title="Informative References">-->
+<!--<rfc include="reference.RFC.3261" />--><!-- SIP -->
+<!--<rfc include="reference.RFC.4086" />--><!-- Randomness Requirements for Security -->
+<!--<rfc include="reference.RFC.4474" />--><!-- SIP Authenticated Identity -->
+<!--<rfc include="reference.RFC.4960" />--><!-- SCTP -->
+<!--<rfc include="reference.RFC.5246" />--><!-- TLS 1.2 -->
+<!--<rfc include="reference.RFC.5479" />--><!-- Media Security Requirements -->
+<!--<rfc include="reference.RFC.5764" />--><!-- DTLS -->
+<!--<rfc include="reference.RFC.6188" />--><!-- SRTP AES-192 AES-256 -->
+<!--</references>-->
+
+<?rfc rfcedstyle="yes" ?>
+<?rfc symrefs="yes" ?>
+</back>
+</rfc>

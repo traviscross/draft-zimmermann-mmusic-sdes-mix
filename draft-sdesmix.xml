@@ -60,11 +60,13 @@ To prevent the adversary from exploiting the SDES key captured from the SIP Invi
 <t>
 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in <xref target="RFC2119"/>. </t>
 <t>
-We represent fields in network-byte order and denote concatenation with ||.  If we say C = A || B, then the first byte of A forms the most significant byte of C. </t>
+We represent all fields in network-byte order and denote concatenation with ||.  If we say C = A || B, then the first byte of A forms the most significant byte of C. </t>
 <t>
 We denote hexidecimal constants with the prefix 0x.  Such a constant is encoded (in network byte order) into an integer of the fewest number of bytes (octets) that can represent the number including any leading zeros, e.g. 0x01 would be encoded in one byte but 0x0001 would be encoded in two bytes. </t>
 <t>
-If b is a sequence of bytes, we denote its length in octets as len(b) and encode this length as a single octet.</t>
+If b is a sequence of bytes, len(b) denotes the length of b in octets. </t>
+<t>
+We denote encoding length in octets with :n where n is an integer.  If a field is longer than n then it is truncated from the right until n octets remain.  If a field is shorter than n, it is padded on the left with zeros.  e.g. 0x01:4 is the integer 1 represented in a 32-bit big-endian field, and len(b):1 is the length of b in octets encoded in a single 8-bit byte.</t>
 
 </section>
 
@@ -107,13 +109,13 @@ To calculate new SDES parameters for a media session, we proceed as follows usin
 
 <figure><artwork>
   salt = srtpmsi || srtpmsr
-  ikm = len(srtpmki) || srtpmki || len(srtpmkr) || srtpmkr
+  ikm = len(srtpmki):4 || srtpmki || len(srtpmkr):4 || srtpmkr
   prk = MAC(salt, ikm)
 
-  srtpmsi2 = MAC(prk, 0x01)
-  srtpmki2 = MAC(prk, srtpmsi2 || 0x02)
-  srtpmsr2 = MAC(prk, srtpmki2 || 0x03)
-  srtpmkr2 = MAC(prk, srtpmsr2 || 0x04)
+  srtpmsi2 = MAC(prk,             0x01) :len(srtpmsi)
+  srtpmki2 = MAC(prk, srtpmsi2 || 0x02) :len(srtpmki)
+  srtpmsr2 = MAC(prk, srtpmki2 || 0x03) :len(srtpmsr)
+  srtpmkr2 = MAC(prk, srtpmsr2 || 0x04) :len(srtpmkr)
 
 </artwork></figure>
 <t>
@@ -123,11 +125,13 @@ MAC is the MAC function negotiated in <xref target='negotiation'/>; </t>
 <t>
 srtpmsi is the SIP initiator's SRTP master salt; </t>
 <t>
-srtpmsr is the SIP responder's SRTP master salt; </t>
-<t>
 srtpmki is the SIP initiator's SRTP master key; </t>
 <t>
-srtpmkr is the SIP responder's SRTP master key. </t>
+srtpmsr is the SIP responder's SRTP master salt; </t>
+<t>
+srtpmkr is the SIP responder's SRTP master key; </t>
+<t>
+the lengths of the keys are encoded in 4 octets in network byte order and the constant values are encoded in a single octet. </t>
 <t>
 The output of the MAC will be truncated as described below.  The parameters srtpmki and srtpmsi are extracted from the SDES transmitted by the SIP initiator, while srtpmkr and srtpmsr are extracted from the SDES transmitted by the SIP responder.  These keys and salts are in binary form, not the base64 representation used by SDES.  The length of the SRTP master salts are defined as 112 bits (14 octets) in <xref target="RFC3711"/>.  The old values for srtpmki, srtpmkr, srtpmsi, srtpmsr, are all respectively replaced by the new values srtpmki2, srtpmkr2, srtpmsi2, and srtpmsr2.  The MAC output is truncated to 14 octets for srtpmsi2 and srtpmsr2, and to the corresponding original key lengths for srtpmki2 and srtpmkr2. </t>
 <t>

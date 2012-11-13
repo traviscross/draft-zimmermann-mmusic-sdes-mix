@@ -1,0 +1,28 @@
+<section anchor='enhanced_sdes' title="Enhanced SDES for SIP forking">
+<t>
+There is a vulnerability when <xref target="RFC4568">SDES</xref> is used with SIP forking.  In SIP forking, the SIP initiator sends separate SIP Invites to multiple SIP endpoints, each containing the same SDES key from the SIP initiator.  If an adversary is in possession of a target's SIP password and registers to become one of the SIP endpoints to receive the SIP Invite, the adversary will have the SDES key to decrypt the media stream from the SIP initiator, even if a different device responds to the SIP Invite.  Here we propose a method to mitigate this vulnerability. </t>
+<t>
+There are two separate SRTP master keys and salts provided by SDES, one for each direction of media flow.  In SIP forking, only one SIP responder will answer the call with a SIP 200 OK, returning a different SDES key for SRTP media from the SIP responder. </t>
+<t>
+To prevent the adversary from exploiting the SDES key captured from the SIP Invite, both parties may hash together both SDES parameters from both parties, and then use the combined hash result to derive new keys to replace the original SDES keys.  The attacker does not have access to the SDES key from the 200 OK, so the attacker will not be able to compute the final set of keys used. </t>
+<t>
+First, the two SIP user agents discover if they both support this extension to SDES by detecting the optional a=SDESMIX SDP attribute from both endpoints.  If and only if they do, the following calculations are performed by both endpoints. </t>
+<t>
+The two SDES keys and salts from the two endpoints are first hashed together into a single shared secret, srtpkey.  This result is then used to re-derive new SDES key replacements for both endpoints. </t>
+
+<figure><artwork>
+  srtpkey = hash(srtpmsi || srtpmsr ||
+                 len(srtpmki) || srtpmki || 
+                 len(srtpmkr) || srtpmkr)
+
+  srtpmki2 = MAC(srtpkey, "srtpmki") [truncated to len(srtpmki)]
+  srtpmkr2 = MAC(srtpkey, "srtpmkr") [truncated to len(srtpmkr)]
+  srtpmsi2 = MAC(srtpkey, "srtpmsi") [truncated to 14 bytes]
+  srtpmsr2 = MAC(srtpkey, "srtpmkr") [truncated to 14 bytes]
+</artwork></figure>
+<t>
+In the above formula, the hash function is SHA-384, and the MAC function is HMAC-SHA-384.  The parameters srtpmki and srtpmsi are extracted from the SDES transmitted by the SIP initiator, while srtpmkr and srtpmsr are extracted from the SDES transmitted by the SIP responder.  These keys and salts are in binary form, not the base64 representation used by SDES.  The explicit length fields, len(), in the above hash are 32-bit big-endian integers, giving the length in octets of the field that follows.  The length in octets of srtpmki or srtpmkr can only be 16, 24, or 32, if the AES is used.  srtpmki is the SIP initiator's SRTP master key, srtpmkr is the SIP responder's SRTP master key, srtpmsi is the SIP initiator's SRTP master salt, and srtpmsr is the SIP responder's SRTP master salt.  The length of the SRTP master salts are defined as 112 bits in <xref target="RFC3711"/>.  The old values for srtpmki, srtpmkr, srtpmsi, srtpmsr, are all respectively replaced by the new values srtpmki2, srtpmkr2, srtpmsi2, and srtpmsr2. </t>
+<t>
+The original crypto suite selected by SDES remains unchanged, including the block cipher algorithm, the key lengths, and the SRTP auth tag sizes and auth tag algorithms.  All keys should be erased immediately after use. </t>
+
+</section>

@@ -47,15 +47,63 @@ This document defines a method by which endpoints using SDES can prevent attacke
 </front>
 
 <middle>
-<section anchor='enhanced_sdes' title="Enhanced SDES for SIP forking">
+<section anchor='intro' title="Introduction">
 <t>
-There is a vulnerability when <xref target="RFC4568">SDES</xref> is used with SIP forking.  In SIP forking, the SIP initiator sends separate SIP Invites to multiple SIP endpoints, each containing the same SDES key from the SIP initiator.  If an adversary is in possession of a target's SIP password and registers to become one of the SIP endpoints to receive the SIP Invite, the adversary will have the SDES key to decrypt the media stream from the SIP initiator, even if a different device responds to the SIP Invite.  Here we propose a method to mitigate this vulnerability. </t>
+There is a vulnerability when <xref target="RFC4568">SDES</xref> is used with SIP forking.  In SIP forking, the SIP initiator sends separate SIP Invites to multiple SIP endpoints (see <xref target="RFC3261"/>), each containing the same SDES key from the SIP initiator as in <xref target="RFC4568"/>.  If an adversary is in possession of a target's SIP password and registers to become one of the SIP endpoints to receive the SIP Invite, the adversary will have the SDES key to decrypt the media stream from the SIP initiator, even if a different device responds to the SIP Invite.  Here we propose a method to mitigate this vulnerability. </t>
 <t>
 There are two separate SRTP master keys and salts provided by SDES, one for each direction of media flow.  In SIP forking, only one SIP responder will answer the call with a SIP 200 OK, returning a different SDES key for SRTP media from the SIP responder.  The attacker does not have access to the SDES key from the 200 OK. </t>
 <t>
 To prevent the adversary from exploiting the SDES key captured from the SIP Invite, both parties may hash together both SDES parameters from both parties, and then use the combined hash result to re-derive new keys and salts to replace the original SDES material for both endpoints. </t>
+</section>
+
+<section anchor='notation' title='Terminology and Notation'>
 <t>
-We use the extract-and-expand construct defined in <xref target="RFC5869"/>. </t>
+The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in <xref target="RFC2119"/>. </t>
+<t>
+We represent fields in network-byte order and denote concatenation with ||.  If we say C = A || B, then the first byte of A forms the most significant byte of C. </t>
+<t>
+We denote hexidecimal constants with the prefix 0x.  Such a constant is encoded (in network byte order) into an integer of the fewest number of bytes (octets) that can represent the number including any leading zeros, e.g. 0x01 would be encoded in one byte but 0x0001 would be encoded in two bytes. </t>
+<t>
+If b is a sequence of bytes, we denote its length in octets as len(b) and encode this length as a single octet.</t>
+
+</section>
+
+<section anchor='sdp-sdes-mix' title='SDP "SDES Mix" Attribute and Parameters'>
+<t>
+This extension to <xref target="RFC4568">SDES</xref> requires support from both endpoints negotiating a session.  We define the "SDES Mix" <xref target="RFC4566">SDP media attribute</xref> to allow the endpoints to signal their support for this extension and to negotiate a MAC function for use in the KDF of <xref target='kdf'/>. </t>
+<t>
+The formal ABNF grammer for the sdes-mix attribute is defined as: </t>
+<figure><artwork>
+"a=sdes-mix:" *WSP mac *("|" mac)
+
+mac = "HMAC-SHA-384" / "HMAC-SHA-512"
+</artwork></figure>
+<t>
+where WSP is defined in <xref target="RFC4234"/>.</t>
+<t>
+This attribute MUST only be placed at the SDP media description level and MUST NOT be placed at the SDP session description level.</t>
+<t>
+The values of mac have the meaning defined in <xref target="RFC2104"/> and <xref target="RFC4634"/>.</t>
+
+</section>
+
+<section anchor='negotiation' title='SDP Negotiation'>
+<t>
+An SDP offer or answer may contain multiple media descriptions.  In this section, we consider each media description separately and individually.</t>
+<t>
+When generating its offer, an endpoint MAY include in a media description the sdes-mix attribute defined in <xref target="sdp-sdes-mix"/>.  If included, the endpoint SHOULD list every MAC function that the endpoint supports.  An endpoint MUST at a minimum support HMAC-SHA-384. </t>
+<t>
+Upon receiving a media description from the offer, an endpoint MUST reply with the sdes-mix attribute if that media description offer includes an sdes-mix attribute AND the endpoint supports at least one of the MAC functions offered.  The endpoint MUST choose one of the offered MAC functions and place that one (and only that one) MAC function in the sdes-mix attribute of its answer for that media description.  An endpoint may use any local policy to select from among the MAC functions offered to it.  The answering endpoint now commits to using the negotiated MAC function for the processing in <xref target='kdf'/> for the SDES crypto attribute (if any) it chose in its answer and MUST process the SDES parameters with this extension. </t>
+<t>
+Upon receiving a media description in the answer, an endpoint MUST process any SDES parameters as defined in <xref target='kdf'/> if the media description includes the sdes-mix attribute.  The single MAC function included in the answer is the negotiated MAC function.</t>
+<t>
+If the offer does not contain an sdes-mix attribute in an SDP media description, an endpoint MUST NOT include the sdes-mix attribute in its answer for that media description.  If an offer or an answer does not contain an sdes-mix attribute in an SDP media description, an endpoint MUST NOT perform the <xref target='kdf'/> processing for any SDES keys contained in that media description. </t>
+
+</section>
+
+<section anchor='kdf' title='Enhanced SDES Key Derivation'>
+<t>
+To calculate new SDES parameters for a media session, we proceed as follows using the extract-and-expand construct defined in <xref target="RFC5869"/>. </t>
 
 <figure><artwork>
   salt = srtpmsi || srtpmsr
@@ -69,11 +117,21 @@ We use the extract-and-expand construct defined in <xref target="RFC5869"/>. </t
 
 </artwork></figure>
 <t>
-In the above formula, the MAC function is defined as HMAC-SHA-384.  The output of the MAC will be truncated as described below.  The parameters srtpmki and srtpmsi are extracted from the SDES transmitted by the SIP initiator, while srtpmkr and srtpmsr are extracted from the SDES transmitted by the SIP responder.  These keys and salts are in binary form, not the base64 representation used by SDES.  The numeric constants are represented by a single octet.  The explicit length fields, len(), in the above functions are 32-bit big-endian integers, giving the length in octets of the field that follows.  The length in octets of srtpmki or srtpmkr can only be 16, 24, or 32, if the AES is used.  srtpmki is the SIP initiator's SRTP master key, srtpmkr is the SIP responder's SRTP master key, srtpmsi is the SIP initiator's SRTP master salt, and srtpmsr is the SIP responder's SRTP master salt.  The length of the SRTP master salts are defined as 112 bits (14 octets) in <xref target="RFC3711"/>.  The old values for srtpmki, srtpmkr, srtpmsi, srtpmsr, are all respectively replaced by the new values srtpmki2, srtpmkr2, srtpmsi2, and srtpmsr2.  The MAC output is truncated to 14 octets for srtpmsi2 and srtpmsr2, and to the corresponding original key lengths for srtpmki2 and srtpmkr2. </t>
+where:</t>
+<t>
+MAC is the MAC function negotiated in <xref target='negotiation'/>; </t>
+<t>
+srtpmsi is the SIP initiator's SRTP master salt; </t>
+<t>
+srtpmsr is the SIP responder's SRTP master salt; </t>
+<t>
+srtpmki is the SIP initiator's SRTP master key; </t>
+<t>
+srtpmkr is the SIP responder's SRTP master key. </t>
+<t>
+The output of the MAC will be truncated as described below.  The parameters srtpmki and srtpmsi are extracted from the SDES transmitted by the SIP initiator, while srtpmkr and srtpmsr are extracted from the SDES transmitted by the SIP responder.  These keys and salts are in binary form, not the base64 representation used by SDES.  The length of the SRTP master salts are defined as 112 bits (14 octets) in <xref target="RFC3711"/>.  The old values for srtpmki, srtpmkr, srtpmsi, srtpmsr, are all respectively replaced by the new values srtpmki2, srtpmkr2, srtpmsi2, and srtpmsr2.  The MAC output is truncated to 14 octets for srtpmsi2 and srtpmsr2, and to the corresponding original key lengths for srtpmki2 and srtpmkr2. </t>
 <t>
 The original crypto suite selected by SDES remains unchanged, including the block cipher algorithm, the key lengths, and the SRTP auth tag sizes and auth tag algorithms.  All keys should be erased immediately after use. </t>
-<t>
-Before applying the above enhancements, the two SIP user agents discover if they both support this extension to SDES by detecting the optional a=sdesmix SDP attribute from both endpoints. </t>
 
 </section>
 
@@ -82,16 +140,18 @@ Before applying the above enhancements, the two SIP user agents discover if they
 <back>
 <?rfc rfcedstyle="no" ?>
 <references title="Normative References">
-<!--<rfc include="reference.RFC.2104" />--><!-- HMAC -->
-<!--<rfc include="reference.RFC.2119" />--><!-- RFC Keywords -->
+<?rfc include="reference.RFC.2104" ?><!-- HMAC -->
+<?rfc include="reference.RFC.2119" ?><!-- RFC Keywords -->
 <?rfc include="reference.RFC.3711" ?><!-- SRTP -->
-<!--<rfc include="reference.RFC.4566" />--><!-- SDP -->
+<?rfc include="reference.RFC.4234" ?><!-- ABNF -->
+<?rfc include="reference.RFC.4566" ?><!-- SDP -->
 <?rfc include="reference.RFC.4568" ?><!-- SDES -->
+<?rfc include="reference.RFC.4634" ?><!-- SHA2 and HMAC-SHA2 -->
 <?rfc include="reference.RFC.5869" ?><!-- HKDF -->
 </references>
 
-<!--<references title="Informative References">-->
-<!--<rfc include="reference.RFC.3261" />--><!-- SIP -->
+<references title="Informative References">
+<?rfc include="reference.RFC.3261" ?><!-- SIP -->
 <!--<rfc include="reference.RFC.4086" />--><!-- Randomness Requirements for Security -->
 <!--<rfc include="reference.RFC.4474" />--><!-- SIP Authenticated Identity -->
 <!--<rfc include="reference.RFC.4960" />--><!-- SCTP -->
@@ -99,7 +159,7 @@ Before applying the above enhancements, the two SIP user agents discover if they
 <!--<rfc include="reference.RFC.5479" />--><!-- Media Security Requirements -->
 <!--<rfc include="reference.RFC.5764" />--><!-- DTLS -->
 <!--<rfc include="reference.RFC.6188" />--><!-- SRTP AES-192 AES-256 -->
-<!--</references>-->
+</references>
 
 <?rfc rfcedstyle="yes" ?>
 <?rfc symrefs="yes" ?>

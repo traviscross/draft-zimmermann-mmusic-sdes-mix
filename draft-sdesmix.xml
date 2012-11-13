@@ -8,7 +8,7 @@
 <rfc ipr="trust200902" number="draft-sdesmix" category="info"
   submissionType="IETF" consensus="yes">
 <front>
-<title abbrev="SDES Mix">Key Mixing Protocol Extension for Enhanced SDES Security</title>
+<title abbrev="SDES Mix">Key Mixing Extension for SDES</title>
 
 <author initials="P." surname="Zimmermann" fullname="Philip Zimmermann">
 <organization>Silent Circle, LLC</organization>

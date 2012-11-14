@@ -7,7 +7,7 @@
 <?rfc subcompact="no"?>
 <rfc ipr="trust200902" category="std" docName="draft-zimmermann-mmusic-sdesc-mix-00">
 <front>
-<title abbrev="SDES Mix">Key Mixing Extension for SDES</title>
+<title abbrev="SDESC Mix">Key Mixing Extension for SDP Security Descriptions</title>
 
 <author initials="P." surname="Zimmermann" fullname="Philip Zimmermann">
 <organization>Silent Circle, LLC</organization>
@@ -40,7 +40,7 @@
 
 <abstract>
 <t>
-This document defines a method by which endpoints using SDES can prevent attackers from using SIP forking to capture useful key material.  We define a Session Description Protocol (SDP) attribute for unicast media streams which can be used to negotiate this extension to SDES (RFC 4568). </t>
+This document defines a method by which endpoints using SDP Security Descriptions can prevent attackers from using SIP forking to capture useful key material.  We define a Session Description Protocol (SDP) attribute for unicast media streams which can be used to negotiate this extension to SDP Security Descriptions (RFC 4568). </t>
 </abstract>
 
 </front>
@@ -48,11 +48,11 @@ This document defines a method by which endpoints using SDES can prevent attacke
 <middle>
 <section anchor='intro' title="Introduction">
 <t>
-There is a <xref target="RFC5479">retargeting</xref> vulnerability when <xref target="RFC4568">SDES</xref> is used with SIP forking.  In SIP forking, the SIP initiator sends separate SIP Invites to multiple SIP endpoints (see <xref target="RFC3261"/>), each containing the same SDES key from the SIP initiator as in <xref target="RFC4568"/>.  If an adversary is in possession of a target's SIP password and registers to become one of the SIP endpoints to receive the SIP Invite, the adversary will have the SDES key to decrypt the media stream from the SIP initiator, even if a different device responds to the SIP Invite.  Here we propose a method to mitigate this vulnerability. </t>
+There is a <xref target="RFC5479">retargeting</xref> vulnerability when <xref target="RFC4568">SDP Security Descriptions</xref> are used with SIP forking.  In SIP forking, the SIP initiator sends separate SIP Invites to multiple SIP endpoints (see <xref target="RFC3261"/>), each containing the same SDP Security Descriptions key from the SIP initiator as in <xref target="RFC4568"/>.  If an adversary is in possession of a target's SIP password and registers to become one of the SIP endpoints to receive the SIP Invite, the adversary will have the SDP Security Descriptions key to decrypt the media stream from the SIP initiator, even if a different device responds to the SIP Invite.  Here we propose a method to mitigate this vulnerability. </t>
 <t>
-There are two separate SRTP master keys and salts provided by SDES, one for each direction of media flow.  In SIP forking, only one SIP responder will answer the call with a SIP 200 OK, returning a different SDES key for SRTP media from the SIP responder.  The attacker does not have access to the SDES key from the 200 OK. </t>
+There are two separate SRTP master keys and salts provided by SDP Security Descriptions, one for each direction of media flow.  In SIP forking, only one SIP responder will answer the call with a SIP 200 OK, returning a different SDP Security Descriptions key for SRTP media from the SIP responder.  The attacker does not have access to the SDP Security Descriptions key from the 200 OK. </t>
 <t>
-To prevent the adversary from exploiting the SDES key captured from the SIP Invite, both parties may hash together both SDES parameters from both parties, and then use the combined hash result to re-derive new keys and salts to replace the original SDES material for both endpoints. </t>
+To prevent the adversary from exploiting the SDP Security Descriptions key captured from the SIP Invite, both parties may hash together both SDP Security Descriptions parameters from both parties, and then use the combined hash result to re-derive new keys and salts to replace the original SDP Security Descriptions material for both endpoints. </t>
 </section>
 
 <section anchor='notation' title='Terminology and Notation'>
@@ -69,13 +69,13 @@ We denote encoding length in octets with :n where n is an integer.  If a field i
 
 </section>
 
-<section anchor='sdp-sdes-mix' title='SDP "SDES Mix" Attribute and Parameters'>
+<section anchor='sdp-sdesc-mix' title='SDP "SDP Security Descriptions Mix" Attribute and Parameters'>
 <t>
-This extension to <xref target="RFC4568">SDES</xref> requires support from both endpoints negotiating a session.  We define the "SDES Mix" <xref target="RFC4566">SDP media attribute</xref> to allow the endpoints to signal their support for this extension and to negotiate a MAC function for use in the KDF of <xref target='kdf'/>. </t>
+This extension to <xref target="RFC4568">SDP Security Descriptions</xref> requires support from both endpoints negotiating a session.  We define the "SDP Security Descriptions Mix" <xref target="RFC4566">SDP media attribute</xref> to allow the endpoints to signal their support for this extension and to negotiate a MAC function for use in the KDF of <xref target='kdf'/>. </t>
 <t>
-The formal ABNF grammer for the sdes-mix attribute is defined as: </t>
+The formal ABNF grammer for the sdesc-mix attribute is defined as: </t>
 <figure><artwork>
-"a=sdes-mix:" *WSP mac *("|" mac)
+"a=sdesc-mix:" *WSP mac *("|" mac)
 
 mac = "HMAC-SHA-384" / "HMAC-SHA-512"
 </artwork></figure>
@@ -92,19 +92,19 @@ The values of mac have the meaning defined in <xref target="RFC2104"/> and <xref
 <t>
 An SDP offer or answer may contain multiple media descriptions.  In this section, we consider each media description separately and individually.</t>
 <t>
-When generating its offer, an endpoint MAY include in a media description the sdes-mix attribute defined in <xref target="sdp-sdes-mix"/>.  If included, the endpoint SHOULD list every MAC function that the endpoint supports.  An endpoint MUST at a minimum support HMAC-SHA-384. </t>
+When generating its offer, an endpoint MAY include in a media description the sdesc-mix attribute defined in <xref target="sdp-sdesc-mix"/>.  If included, the endpoint SHOULD list every MAC function that the endpoint supports.  An endpoint MUST at a minimum support HMAC-SHA-384. </t>
 <t>
-Upon receiving a media description from the offer, an endpoint MUST reply with the sdes-mix attribute if that media description offer includes an sdes-mix attribute AND the endpoint supports at least one of the MAC functions offered.  The endpoint MUST choose one of the offered MAC functions and place that one (and only that one) MAC function in the sdes-mix attribute of its answer for that media description.  An endpoint may use any local policy to select from among the MAC functions offered to it.  The answering endpoint now commits to using the negotiated MAC function for the processing in <xref target='kdf'/> for the SDES crypto attribute (if any) it chose in its answer and MUST process the SDES parameters with this extension. </t>
+Upon receiving a media description from the offer, an endpoint MUST reply with the sdesc-mix attribute if that media description offer includes an sdesc-mix attribute AND the endpoint supports at least one of the MAC functions offered.  The endpoint MUST choose one of the offered MAC functions and place that one (and only that one) MAC function in the sdesc-mix attribute of its answer for that media description.  An endpoint may use any local policy to select from among the MAC functions offered to it.  The answering endpoint now commits to using the negotiated MAC function for the processing in <xref target='kdf'/> for the SDP Security Descriptions crypto attribute (if any) it chose in its answer and MUST process the SDP Security Descriptions parameters with this extension. </t>
 <t>
-Upon receiving a media description in the answer, an endpoint MUST process any SDES parameters as defined in <xref target='kdf'/> if the media description includes the sdes-mix attribute.  The single MAC function included in the answer is the negotiated MAC function.</t>
+Upon receiving a media description in the answer, an endpoint MUST process any SDP Security Descriptions parameters as defined in <xref target='kdf'/> if the media description includes the sdesc-mix attribute.  The single MAC function included in the answer is the negotiated MAC function.</t>
 <t>
-If the offer does not contain an sdes-mix attribute in an SDP media description, an endpoint MUST NOT include the sdes-mix attribute in its answer for that media description.  If an offer or an answer does not contain an sdes-mix attribute in an SDP media description, an endpoint MUST NOT perform the <xref target='kdf'/> processing for any SDES keys contained in that media description. </t>
+If the offer does not contain an sdesc-mix attribute in an SDP media description, an endpoint MUST NOT include the sdesc-mix attribute in its answer for that media description.  If an offer or an answer does not contain an sdesc-mix attribute in an SDP media description, an endpoint MUST NOT perform the <xref target='kdf'/> processing for any SDP Security Descriptions keys contained in that media description. </t>
 
 </section>
 
-<section anchor='kdf' title='Enhanced SDES Key Derivation'>
+<section anchor='kdf' title='Enhanced SDP Security Descriptions Key Derivation'>
 <t>
-To calculate new SDES parameters for a media session, we proceed as follows using the extract-and-expand construct defined in <xref target="RFC5869"/>. </t>
+To calculate new SDP Security Descriptions parameters for a media session, we proceed as follows using the extract-and-expand construct defined in <xref target="RFC5869"/>. </t>
 
 <figure><artwork>
   salt = srtpmsi || srtpmsr
@@ -132,9 +132,9 @@ srtpmkr is the SIP responder's SRTP master key; </t>
 <t>
 the lengths of the keys are encoded in 4 octets in network byte order and the constant values are encoded in a single octet. </t>
 <t>
-The output of the MAC will be truncated as described below.  The parameters srtpmki and srtpmsi are extracted from the SDES transmitted by the SIP initiator, while srtpmkr and srtpmsr are extracted from the SDES transmitted by the SIP responder.  These keys and salts are in binary form, not the base64 representation used by SDES.  The length of the SRTP master salts are defined as 112 bits (14 octets) in <xref target="RFC3711"/>.  The old values for srtpmki, srtpmkr, srtpmsi, srtpmsr, are all respectively replaced by the new values srtpmki2, srtpmkr2, srtpmsi2, and srtpmsr2.  The MAC output is truncated to 14 octets for srtpmsi2 and srtpmsr2, and to the corresponding original key lengths for srtpmki2 and srtpmkr2. </t>
+The output of the MAC will be truncated as described below.  The parameters srtpmki and srtpmsi are extracted from the SDP Security Descriptions transmitted by the SIP initiator, while srtpmkr and srtpmsr are extracted from the SDP Security Descriptions transmitted by the SIP responder.  These keys and salts are in binary form, not the base64 representation used by SDP Security Descriptions.  The length of the SRTP master salts are defined as 112 bits (14 octets) in <xref target="RFC3711"/>.  The old values for srtpmki, srtpmkr, srtpmsi, srtpmsr, are all respectively replaced by the new values srtpmki2, srtpmkr2, srtpmsi2, and srtpmsr2.  The MAC output is truncated to 14 octets for srtpmsi2 and srtpmsr2, and to the corresponding original key lengths for srtpmki2 and srtpmkr2. </t>
 <t>
-The original crypto suite selected by SDES remains unchanged, including the block cipher algorithm, the key lengths, and the SRTP auth tag sizes and auth tag algorithms.  All keys should be erased immediately after use. </t>
+The original crypto suite selected by SDP Security Descriptions remains unchanged, including the block cipher algorithm, the key lengths, and the SRTP auth tag sizes and auth tag algorithms.  All keys should be erased immediately after use. </t>
 
 </section>
 
@@ -148,7 +148,7 @@ The original crypto suite selected by SDES remains unchanged, including the bloc
 <?rfc include="reference.RFC.3711" ?><!-- SRTP -->
 <?rfc include="reference.RFC.4234" ?><!-- ABNF -->
 <?rfc include="reference.RFC.4566" ?><!-- SDP -->
-<?rfc include="reference.RFC.4568" ?><!-- SDES -->
+<?rfc include="reference.RFC.4568" ?><!-- SDESC -->
 <?rfc include="reference.RFC.4634" ?><!-- SHA2 and HMAC-SHA2 -->
 <?rfc include="reference.RFC.5869" ?><!-- HKDF -->
 </references>

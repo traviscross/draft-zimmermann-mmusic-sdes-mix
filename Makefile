@@ -10,7 +10,7 @@ all-docs: $(OUTPUTS)
 bundle: $(NAME).tar.gz
 
 clean:
-	rm -f *.txt *.html *.nr *.ps *.pdf *.epub *.exp.xml *.fo *.fop
+	rm -f *.txt *.html *.nr *.ps *.pdf *.epub *.exp.xml *.fo *.fop *.tar.gz
 
 fetch:
 	wget -N http://zfone.com/docs/ietf/$(NAME).xml

@@ -84,14 +84,15 @@ The formal ABNF grammer for the crypto-mix attribute is defined as: </t>
 <figure><artwork>
 "a=crypto-mix:" *WSP mac *("|" mac)
 
-mac = "HMAC-SHA-384" / "HMAC-SHA-512"
+mac = "HMAC-SHA-384" / "HMAC-SHA-512" / mac-ext
+mac-ext = 1*(%x21-7B / %x7D-7E) ; printing chars except pipe
 </artwork></figure>
 <t>
 where WSP is defined in <xref target="RFC4234"/>.</t>
 <t>
 This attribute MUST only be placed at the SDP media description level and MUST NOT be placed at the SDP session description level.</t>
 <t>
-The values of mac have the meaning defined in <xref target="RFC2104"/> and <xref target="RFC4634"/>.</t>
+The values of mac have the meaning defined in <xref target="RFC2104"/> and <xref target="RFC4634"/>.  Values for mac-ext can be standarized as described in <xref target='iana'/>. </t>
 
 </section>
 
@@ -143,7 +144,7 @@ The original crypto suite selected by SDP Security Descriptions remains unchange
 
 <section anchor='iana' title='IANA Considerations'>
 <t>
-Create a new registry, titled Security Description SDESCMIX, initially populated with HMAC-SHA-384 and HMAC-SHA-512.  This registry can be extended via <xref target="RFC5226">Standards Action</xref>. </t>
+Create a new registry, titled Security Description SDESCMIX, initially populated with HMAC-SHA-384 and HMAC-SHA-512.  This registry can be extended via <xref target="RFC5226">Standards Action</xref>, and it MUST provide the name of the MAC function as described in the grammar for mac-ext in <xref target='sdp-crypto-mix'/>. </t>
 
 </section>
 

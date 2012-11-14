@@ -138,6 +138,12 @@ The original crypto suite selected by SDP Security Descriptions remains unchange
 
 </section>
 
+<section anchor='iana' title='IANA Considerations'>
+<t>
+Create a new registry, titled Security Description SDESCMIX, initially populated with HMAC-SHA-384 and HMAC-SHA-512.  This registry can be extended via <xref target="RFC5226">Standards Action</xref>. </t>
+
+</section>
+
 </middle>
 
 <back>
@@ -150,6 +156,7 @@ The original crypto suite selected by SDP Security Descriptions remains unchange
 <?rfc include="reference.RFC.4566" ?><!-- SDP -->
 <?rfc include="reference.RFC.4568" ?><!-- SDESC -->
 <?rfc include="reference.RFC.4634" ?><!-- SHA2 and HMAC-SHA2 -->
+<?rfc include="reference.RFC.5226" ?><!-- IANA Considerations -->
 <?rfc include="reference.RFC.5869" ?><!-- HKDF -->
 </references>
 

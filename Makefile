@@ -14,9 +14,6 @@ clean:
 fetch:
 	wget -N http://zfone.com/docs/ietf/draft-sdesmix.xml
 
-draft-sdesmix.diff.html: rfc6189.txt draft-sdesmix.txt
-	./rfcdiff --stdout rfc6189.txt draft-sdesmix.txt > $@
-
 draft-sdesmix.tar.gz: $(OUTPUTS)
 	mkdir -p draft-sdesmix
 	cp $(OUTPUTS) draft-sdesmix/

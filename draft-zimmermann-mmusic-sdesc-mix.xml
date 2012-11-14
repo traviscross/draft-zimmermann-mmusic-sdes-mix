@@ -76,13 +76,13 @@ We denote encoding length in octets with :n where n is an integer.  If a field i
 
 </section>
 
-<section anchor='sdp-sdesc-mix' title='SDP "SDP Security Descriptions Mix" Attribute and Parameters'>
+<section anchor='sdp-crypto-mix' title='SDP "SDP Security Descriptions Mix" Attribute and Parameters'>
 <t>
 This extension to <xref target="RFC4568">SDP Security Descriptions</xref> requires support from both endpoints negotiating a session.  We define the "SDP Security Descriptions Mix" <xref target="RFC4566">SDP media attribute</xref> to allow the endpoints to signal their support for this extension and to negotiate a MAC function for use in the KDF of <xref target='kdf'/>. </t>
 <t>
-The formal ABNF grammer for the sdesc-mix attribute is defined as: </t>
+The formal ABNF grammer for the crypto-mix attribute is defined as: </t>
 <figure><artwork>
-"a=sdesc-mix:" *WSP mac *("|" mac)
+"a=crypto-mix:" *WSP mac *("|" mac)
 
 mac = "HMAC-SHA-384" / "HMAC-SHA-512"
 </artwork></figure>
@@ -99,13 +99,13 @@ The values of mac have the meaning defined in <xref target="RFC2104"/> and <xref
 <t>
 An SDP offer or answer may contain multiple media descriptions.  In this section, we consider each media description separately and individually.</t>
 <t>
-When generating its offer, an endpoint MAY include in a media description the sdesc-mix attribute defined in <xref target="sdp-sdesc-mix"/>.  If included, the endpoint SHOULD list every MAC function that the endpoint supports.  An endpoint MUST at a minimum support HMAC-SHA-384. </t>
+When generating its offer, an endpoint MAY include in a media description the crypto-mix attribute defined in <xref target="sdp-crypto-mix"/>.  If included, the endpoint SHOULD list every MAC function that the endpoint supports.  An endpoint MUST at a minimum support HMAC-SHA-384. </t>
 <t>
-Upon receiving a media description from the offer, an endpoint MUST reply with the sdesc-mix attribute if that media description offer includes an sdesc-mix attribute AND the endpoint supports at least one of the MAC functions offered.  The endpoint MUST choose one of the offered MAC functions and place that one (and only that one) MAC function in the sdesc-mix attribute of its answer for that media description.  An endpoint may use any local policy to select from among the MAC functions offered to it.  The answering endpoint now commits to using the negotiated MAC function for the processing in <xref target='kdf'/> for the SDP Security Descriptions crypto attribute (if any) it chose in its answer and MUST process the SDP Security Descriptions parameters with this extension. </t>
+Upon receiving a media description from the offer, an endpoint MUST reply with the crypto-mix attribute if that media description offer includes an crypto-mix attribute AND the endpoint supports at least one of the MAC functions offered.  The endpoint MUST choose one of the offered MAC functions and place that one (and only that one) MAC function in the crypto-mix attribute of its answer for that media description.  An endpoint may use any local policy to select from among the MAC functions offered to it.  The answering endpoint now commits to using the negotiated MAC function for the processing in <xref target='kdf'/> for the SDP Security Descriptions crypto attribute (if any) it chose in its answer and MUST process the SDP Security Descriptions parameters with this extension. </t>
 <t>
-Upon receiving a media description in the answer, an endpoint MUST process any SDP Security Descriptions parameters as defined in <xref target='kdf'/> if the media description includes the sdesc-mix attribute.  The single MAC function included in the answer is the negotiated MAC function.</t>
+Upon receiving a media description in the answer, an endpoint MUST process any SDP Security Descriptions parameters as defined in <xref target='kdf'/> if the media description includes the crypto-mix attribute.  The single MAC function included in the answer is the negotiated MAC function.</t>
 <t>
-If the offer does not contain an sdesc-mix attribute in an SDP media description, an endpoint MUST NOT include the sdesc-mix attribute in its answer for that media description.  If an offer or an answer does not contain an sdesc-mix attribute in an SDP media description, an endpoint MUST NOT perform the <xref target='kdf'/> processing for any SDP Security Descriptions keys contained in that media description. </t>
+If the offer does not contain an crypto-mix attribute in an SDP media description, an endpoint MUST NOT include the crypto-mix attribute in its answer for that media description.  If an offer or an answer does not contain an crypto-mix attribute in an SDP media description, an endpoint MUST NOT perform the <xref target='kdf'/> processing for any SDP Security Descriptions keys contained in that media description. </t>
 
 </section>
 

@@ -1,6 +1,6 @@
 # makefile
 
-NAME=draft-sdesmix
+NAME=draft-zimmermann-mmusic-sdesc-mix
 OUTPUTS=$(NAME).txt $(NAME).html $(NAME).nr $(NAME).txt.pdf $(NAME).html.epub $(NAME).xslt.pdf
 
 all: all-docs bundle

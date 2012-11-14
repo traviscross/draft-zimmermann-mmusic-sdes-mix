@@ -1,25 +1,26 @@
 # makefile
 
-OUTPUTS=draft-sdesmix.txt draft-sdesmix.html draft-sdesmix.nr draft-sdesmix.txt.pdf draft-sdesmix.html.epub draft-sdesmix.xslt.pdf
+NAME=draft-sdesmix
+OUTPUTS=$(NAME).txt $(NAME).html $(NAME).nr $(NAME).txt.pdf $(NAME).html.epub $(NAME).xslt.pdf
 
 all: all-docs bundle
 
 all-docs: $(OUTPUTS)
 
-bundle: draft-sdesmix.tar.gz
+bundle: $(NAME).tar.gz
 
 clean:
 	rm -f *.txt *.html *.nr *.ps *.pdf *.epub *.exp.xml *.fo *.fop
 
 fetch:
-	wget -N http://zfone.com/docs/ietf/draft-sdesmix.xml
+	wget -N http://zfone.com/docs/ietf/$(NAME).xml
 
-draft-sdesmix.tar.gz: $(OUTPUTS)
-	mkdir -p draft-sdesmix
-	cp $(OUTPUTS) draft-sdesmix/
-	tar cvf draft-sdesmix.tar draft-sdesmix
-	rm -rf draft-sdesmix
-	gzip -f -9 draft-sdesmix.tar
+$(NAME).tar.gz: $(OUTPUTS)
+	mkdir -p $(NAME)
+	cp $(OUTPUTS) $(NAME)/
+	tar cvf $(NAME).tar $(NAME)
+	rm -rf $(NAME)
+	gzip -f -9 $(NAME).tar
 
 %.txt: %.xml
 	xml2rfc $< $@

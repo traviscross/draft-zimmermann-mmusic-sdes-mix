@@ -52,7 +52,7 @@ There is a <xref target="RFC5479">retargeting</xref> vulnerability when <xref ta
 <t>
 There are two separate SRTP master keys and salts provided by SDP Security Descriptions, one for each direction of media flow.  In SIP forking, only one SIP responder will answer the call with a SIP 200 OK, returning a different SDP Security Descriptions key for SRTP media from the SIP responder.  The attacker does not have access to the SDP Security Descriptions key from the 200 OK. </t>
 <t>
-To prevent the adversary from exploiting the SDP Security Descriptions key captured from the SIP Invite, both parties may hash together both SDP Security Descriptions parameters from both parties, and then use the combined hash result to re-derive new keys and salts to replace the original SDP Security Descriptions material for both endpoints. </t>
+To prevent the adversary from exploiting the SDP Security Descriptions key captured from the SIP Invite, the new mechanism described in this document allows both calling and called parties to hash each of their SDP Security Descriptions keys together and then use the combined hash result to re-derive new keys and salts to replace the original SDP Security Descriptions material for both endpoints. </t>
 </section>
 
 <section anchor='notation' title='Terminology and Notation'>

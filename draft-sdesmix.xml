@@ -118,19 +118,15 @@ To calculate new SDP Security Descriptions parameters for a media session, we pr
 
 </artwork></figure>
 <t>
-where:</t>
-<t>
-MAC is the MAC function negotiated in <xref target='negotiation'/>; </t>
-<t>
-srtpmsi is the SIP initiator's SRTP master salt; </t>
-<t>
-srtpmki is the SIP initiator's SRTP master key; </t>
-<t>
-srtpmsr is the SIP responder's SRTP master salt; </t>
-<t>
-srtpmkr is the SIP responder's SRTP master key; </t>
-<t>
-the lengths of the keys are encoded in 4 octets in network byte order and the constant values are encoded in a single octet. </t>
+where:
+<list style="empty">
+<t>MAC is the MAC function negotiated in <xref target='negotiation'/>; </t>
+<t>srtpmsi is the SIP initiator's SRTP master salt; </t>
+<t>srtpmki is the SIP initiator's SRTP master key; </t>
+<t>srtpmsr is the SIP responder's SRTP master salt; </t>
+<t>srtpmkr is the SIP responder's SRTP master key; </t>
+<t>the lengths of the keys are encoded in 4 octets in network byte order and the constant values are encoded in a single octet. </t>
+</list></t>
 <t>
 The output of the MAC will be truncated as described below.  The parameters srtpmki and srtpmsi are extracted from the SDP Security Descriptions transmitted by the SIP initiator, while srtpmkr and srtpmsr are extracted from the SDP Security Descriptions transmitted by the SIP responder.  These keys and salts are in binary form, not the base64 representation used by SDP Security Descriptions.  The length of the SRTP master salts are defined as 112 bits (14 octets) in <xref target="RFC3711"/>.  The old values for srtpmki, srtpmkr, srtpmsi, srtpmsr, are all respectively replaced by the new values srtpmki2, srtpmkr2, srtpmsi2, and srtpmsr2.  The MAC output is truncated to 14 octets for srtpmsi2 and srtpmsr2, and to the corresponding original key lengths for srtpmki2 and srtpmkr2. </t>
 <t>

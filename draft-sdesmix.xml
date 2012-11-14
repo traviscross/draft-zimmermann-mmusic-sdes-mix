@@ -48,7 +48,7 @@ This document defines a method by which endpoints using SDES can prevent attacke
 <middle>
 <section anchor='intro' title="Introduction">
 <t>
-There is a vulnerability when <xref target="RFC4568">SDES</xref> is used with SIP forking.  In SIP forking, the SIP initiator sends separate SIP Invites to multiple SIP endpoints (see <xref target="RFC3261"/>), each containing the same SDES key from the SIP initiator as in <xref target="RFC4568"/>.  If an adversary is in possession of a target's SIP password and registers to become one of the SIP endpoints to receive the SIP Invite, the adversary will have the SDES key to decrypt the media stream from the SIP initiator, even if a different device responds to the SIP Invite.  Here we propose a method to mitigate this vulnerability. </t>
+There is a <xref target="RFC5479">retargeting</xref> vulnerability when <xref target="RFC4568">SDES</xref> is used with SIP forking.  In SIP forking, the SIP initiator sends separate SIP Invites to multiple SIP endpoints (see <xref target="RFC3261"/>), each containing the same SDES key from the SIP initiator as in <xref target="RFC4568"/>.  If an adversary is in possession of a target's SIP password and registers to become one of the SIP endpoints to receive the SIP Invite, the adversary will have the SDES key to decrypt the media stream from the SIP initiator, even if a different device responds to the SIP Invite.  Here we propose a method to mitigate this vulnerability. </t>
 <t>
 There are two separate SRTP master keys and salts provided by SDES, one for each direction of media flow.  In SIP forking, only one SIP responder will answer the call with a SIP 200 OK, returning a different SDES key for SRTP media from the SIP responder.  The attacker does not have access to the SDES key from the 200 OK. </t>
 <t>
@@ -159,7 +159,7 @@ The original crypto suite selected by SDES remains unchanged, including the bloc
 <!--<rfc include="reference.RFC.4474" />--><!-- SIP Authenticated Identity -->
 <!--<rfc include="reference.RFC.4960" />--><!-- SCTP -->
 <!--<rfc include="reference.RFC.5246" />--><!-- TLS 1.2 -->
-<!--<rfc include="reference.RFC.5479" />--><!-- Media Security Requirements -->
+<?rfc include="reference.RFC.5479" ?><!-- Media Security Requirements -->
 <!--<rfc include="reference.RFC.5764" />--><!-- DTLS -->
 <!--<rfc include="reference.RFC.6188" />--><!-- SRTP AES-192 AES-256 -->
 </references>

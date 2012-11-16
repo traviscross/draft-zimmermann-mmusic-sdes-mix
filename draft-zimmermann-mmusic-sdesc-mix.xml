@@ -142,7 +142,6 @@ where:
 <t>mko_f is the offerer's final SRTP master key for encryption; </t>
 <t>msa_f is the answerer's final SRTP master salt for encryption; </t>
 <t>mka_f is the answerer's final SRTP master key for encryption; </t>
-<t>the lengths of the keys are encoded in 4 octets in network byte order and the constant values are encoded in a single octet. </t>
 </list></t>
 <t>
 The SRTP master salts mso and msa and SRTP master keys mko and mka are taken from the selected <xref target="RFC4568">SDP Security Descriptions</xref> crypto attribute in the SDP offer and answer.  When performing <xref target="RFC3711">SRTP</xref>, the offerer MUST use mso_f as the master salt and mko_f as the master key, and the answerer must use msa_f as the master salt and mka_f as the master key. </t>

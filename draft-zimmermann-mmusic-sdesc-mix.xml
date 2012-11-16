@@ -106,7 +106,7 @@ The values of mac have the meaning defined in <xref target="RFC2104"/> and <xref
 <t>
 An SDP offer or answer may contain multiple media descriptions.  In this section, we consider each media description separately and individually; by 'offer' we denote a media description in a full SDP offer and by 'answer' we denote a media description in a full SDP answer. </t>
 <t>
-When generating an offer, an endpoint MAY include the crypto-mix attribute defined in <xref target="sdp-crypto-mix"/>.  If included, the endpoint SHOULD list every MAC function that the endpoint supports.  An endpoint MUST at a minimum support HMAC-SHA-384. </t>
+When generating an offer, an endpoint SHOULD include the crypto-mix attribute defined in <xref target="sdp-crypto-mix"/>.  If included, the endpoint SHOULD list every MAC function that the endpoint supports.  An endpoint MUST at a minimum support HMAC-SHA-384. </t>
 <t>
 If the offer contains the crypto-mix attribute, the answerer MUST check whether it supports at least one of the offered MAC functions.  If it does then it MUST choose one and place that one (and only that one) MAC function in the crypto-mix attribute of its answer.  An endpoint may use any local policy to select from among the MAC functions offered to it. </t>
 <t>

@@ -47,7 +47,7 @@
 
 <abstract>
 <t>
-This document defines a method by which endpoints using SDP Security Descriptions can prevent attackers from using SIP forking to capture useful key material.  We define a Session Description Protocol (SDP) attribute for unicast media streams which can be used to negotiate this extension to SDP Security Descriptions (RFC 4568). </t>
+This document defines a method by which endpoints using SDP Security Descriptions can frustrate attackers who have captured key material leaked by SIP forking and retargeting mechanisms.  We define a Session Description Protocol (SDP) attribute for unicast media streams which can be used to negotiate this extension to SDP Security Descriptions (RFC 4568). </t>
 </abstract>
 
 </front>
@@ -55,16 +55,20 @@ This document defines a method by which endpoints using SDP Security Description
 <middle>
 <section anchor='intro' title="Introduction">
 <t>
-There is a <xref target="RFC5479">retargeting</xref> vulnerability when <xref target="RFC4568">SDP Security Descriptions</xref> are used with SIP forking.  In SIP forking, the SIP initiator sends separate SIP Invites to multiple SIP endpoints (see <xref target="RFC3261"/>), each containing the same SDP Security Descriptions key from the SIP initiator as in <xref target="RFC4568"/>.  If an adversary is in possession of a target's SIP password and registers to become one of the SIP endpoints to receive the SIP Invite, the adversary will have the SDP Security Descriptions key to decrypt the media stream from the SIP initiator, even if a different device responds to the SIP Invite.  Here we propose a method to mitigate this vulnerability. </t>
+When a SIP user agent makes a call via a SIP proxy, that proxy may send the user agent's INVITE to one or more endpoints that do not successfully answer the call because of <xref target='RFC5479'>SIP forking</xref> and <xref target='RFC5479'>SIP retargeting</xref>.  Despite not being a party to the final media session, these endpoints will have received the full SDP offer.  When the SDP offer contains non-public key information, as it does when using <xref target='RFC4568'>SDP Security Descriptions</xref>, this may result in an attacker acquiring useful key material. </t>
 <t>
-There are two separate SRTP master keys and salts provided by SDP Security Descriptions, one for each direction of media flow.  In SIP forking, only one SIP responder will answer the call with a SIP 200 OK, returning a different SDP Security Descriptions key for SRTP media from the SIP responder.  The attacker does not have access to the SDP Security Descriptions key from the 200 OK. </t>
+In this document, we propose a method for mitigating this attack vector for user agents unable to migrate to key negotiation protocols with better security guarantees such as <xref target='RFC6189'>ZRTP</xref> or <xref target='RFC4347'>DTLS</xref>. </t>
 <t>
-To prevent the adversary from exploiting the SDP Security Descriptions key captured from the SIP Invite, the new mechanism described in this document allows both calling and called parties to hash each of their SDP Security Descriptions keys together and then use the combined hash result to re-derive new keys and salts to replace the original SDP Security Descriptions material for both endpoints. </t>
+Our method relies on the relative difficulty for the attacker of obtaining the SDP answer.  When a user agent provides its SDP answer, this answer will be routed back to the UAC without invoking <xref target='RFC5479'>SIP forking</xref> or <xref target='RFC5479'>retargeting</xref> behaviors. </t>
+<t>
+By combining the offerer's key and the answer's key using a cryptographically strong function we can <xref target='RFC5869'>extract</xref> a new pseudo-random key (PRK) known only to parties who possess both keys.  We can then <xref target='RFC5869'>expand</xref> this PRK to create new secret keys for both endpoints. </t>
 </section>
 
 <section anchor='notation' title='Terminology and Notation'>
 <t>
 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in <xref target="RFC2119"/>. </t>
+<t>
+Throughout this document we use terminology and acronyms defined in Section 6 of <xref target='RFC3261'/> such as UAS and UAC.</t>
 <t>
 We represent all fields in network-byte order and denote concatenation with ||.  If we say C = A || B, then the first byte of A forms the most significant byte of C. </t>
 <t>
@@ -167,12 +171,14 @@ Create a new registry, titled Security Description SDESCMIX, initially populated
 <references title="Informative References">
 <?rfc include="reference.RFC.3261" ?><!-- SIP -->
 <!--<rfc include="reference.RFC.4086" />--><!-- Randomness Requirements for Security -->
+<?rfc include="reference.RFC.4347" ?><!-- DTLS -->
 <!--<rfc include="reference.RFC.4474" />--><!-- SIP Authenticated Identity -->
 <!--<rfc include="reference.RFC.4960" />--><!-- SCTP -->
 <!--<rfc include="reference.RFC.5246" />--><!-- TLS 1.2 -->
 <?rfc include="reference.RFC.5479" ?><!-- Media Security Requirements -->
 <!--<rfc include="reference.RFC.5764" />--><!-- DTLS -->
 <!--<rfc include="reference.RFC.6188" />--><!-- SRTP AES-192 AES-256 -->
+<?rfc include="reference.RFC.6189" ?><!-- SRTP AES-192 AES-256 -->
 </references>
 
 <?rfc rfcedstyle="yes" ?>

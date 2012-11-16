@@ -29,20 +29,6 @@
 </address>
 </author>
 
-<author fullname="Dan Wing" initials="D." surname="Wing">
-<organization abbrev="Cisco">Cisco Systems, Inc.</organization>
-<address>
-<postal>
-<street>170 West Tasman Drive</street>
-<city>San Jose</city>
-<region>California</region>
-<code>95134</code>
-<country>USA</country>
-</postal>
-<email>dwing@cisco.com</email>
-</address>
-</author>
-
 <author initials="J." surname="Narbuts" fullname="Janis Narbuts">
 <organization>Tivi</organization>
 <address>
@@ -54,6 +40,20 @@
 <country>Latvia</country>
 </postal>
 <email>janis@tivi.com</email>
+</address>
+</author>
+
+<author fullname="Dan Wing" initials="D." surname="Wing">
+<organization abbrev="Cisco">Cisco Systems, Inc.</organization>
+<address>
+<postal>
+<street>170 West Tasman Drive</street>
+<city>San Jose</city>
+<region>California</region>
+<code>95134</code>
+<country>USA</country>
+</postal>
+<email>dwing@cisco.com</email>
 </address>
 </author>
 

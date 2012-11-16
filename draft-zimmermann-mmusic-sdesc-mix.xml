@@ -68,7 +68,7 @@ By combining the offerer's key and the answer's key using a cryptographically st
 <t>
 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in <xref target="RFC2119"/>. </t>
 <t>
-Throughout this document we use terminology and acronyms defined in Section 6 of <xref target='RFC3261'/>. </t>
+Throughout this document we use terminology and acronyms defined in Section 6 of <xref target='RFC3261'/>.  Our use of the word 'session' in this document corresponds to the definition of an SDP session in <xref target='RFC4566'/>. </t>
 <t>
 We represent all fields in network-byte order and denote concatenation with ||.  If we say C = A || B, then the first byte of A forms the most significant byte of C. </t>
 <t>

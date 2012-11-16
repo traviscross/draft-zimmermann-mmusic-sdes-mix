@@ -30,17 +30,17 @@
 </author>
 
 <author fullname="Dan Wing" initials="D." surname="Wing">
-  <organization abbrev="Cisco">Cisco Systems, Inc.</organization>
-  <address>
-    <postal>
-      <street>170 West Tasman Drive</street>
-      <city>San Jose</city>
-      <region>California</region>
-      <code>95134</code>
-      <country>USA</country>
-    </postal>
-    <email>dwing@cisco.com</email>
-  </address>
+<organization abbrev="Cisco">Cisco Systems, Inc.</organization>
+<address>
+<postal>
+<street>170 West Tasman Drive</street>
+<city>San Jose</city>
+<region>California</region>
+<code>95134</code>
+<country>USA</country>
+</postal>
+<email>dwing@cisco.com</email>
+</address>
 </author>
 
 <date month="November" year="2012"/>

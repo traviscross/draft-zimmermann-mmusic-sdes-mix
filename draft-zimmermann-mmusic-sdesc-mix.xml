@@ -104,15 +104,15 @@ The values of mac have the meaning defined in <xref target="RFC2104"/> and <xref
 
 <section anchor='negotiation' title='SDP Negotiation'>
 <t>
-An SDP offer or answer may contain multiple media descriptions.  In this section, we consider each media description separately and individually. </t>
+An SDP offer or answer may contain multiple media descriptions.  In this section, we consider each media description separately and individually; by 'offer' we denote a media description in a full SDP offer and by 'answer' we denote a media description in a full SDP answer. </t>
 <t>
-When generating its offer, an endpoint MAY include in a media description the crypto-mix attribute defined in <xref target="sdp-crypto-mix"/>.  If included, the endpoint SHOULD list every MAC function that the endpoint supports.  An endpoint MUST at a minimum support HMAC-SHA-384. </t>
+When generating an offer, an endpoint MAY include the crypto-mix attribute defined in <xref target="sdp-crypto-mix"/>.  If included, the endpoint SHOULD list every MAC function that the endpoint supports.  An endpoint MUST at a minimum support HMAC-SHA-384. </t>
 <t>
-Upon receiving a media description from the offer, an endpoint MUST reply with the crypto-mix attribute if that media description offer includes an crypto-mix attribute AND the endpoint supports at least one of the MAC functions offered.  The endpoint MUST choose one of the offered MAC functions and place that one (and only that one) MAC function in the crypto-mix attribute of its answer for that media description.  An endpoint may use any local policy to select from among the MAC functions offered to it.  The answering endpoint now commits to using the negotiated MAC function for the processing in <xref target='kdf'/> for the SDP Security Descriptions crypto attribute (if any) it chose in its answer and MUST process the SDP Security Descriptions parameters with this extension. </t>
+If the offer contains the crypto-mix attribute, the answerer MUST check whether it supports at least one of the offered MAC functions.  If it does then it MUST choose one and place that one (and only that one) MAC function in the crypto-mix attribute of its answer.  An endpoint may use any local policy to select from among the MAC functions offered to it. </t>
 <t>
-Upon receiving a media description in the answer, an endpoint MUST process any SDP Security Descriptions parameters as defined in <xref target='kdf'/> if the media description includes the crypto-mix attribute.  The single MAC function included in the answer is the negotiated MAC function. </t>
+When the offerer accepts the answer, the single MAC function contained in the answer's crypto-mix attribute becomes the negotiated MAC function.  Both endpoints MUST process any <xref target="RFC4568">SDP Security Descriptions</xref> parameters as defined in <xref target='kdf'/>. </t>
 <t>
-If the offer does not contain an crypto-mix attribute in an SDP media description, an endpoint MUST NOT include the crypto-mix attribute in its answer for that media description.  If an offer or an answer does not contain an crypto-mix attribute in an SDP media description, an endpoint MUST NOT perform the <xref target='kdf'/> processing for any SDP Security Descriptions keys contained in that media description. </t>
+If the offer does not contain a crypto-mix attribute or contains a crypto-mix attribute that lists only MAC functions unsupported by the answerer, the answerer MUST NOT include the crypto-mix attribute in its answer.  If a received offer or answer does not contain a crypto-mix attribute, an endpoint MUST NOT perform the <xref target='kdf'/> processing for any <xref target="RFC4568">SDP Security Descriptions</xref> keys contained in the media description. </t>
 
 </section>
 

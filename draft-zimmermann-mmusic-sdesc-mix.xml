@@ -151,7 +151,7 @@ The SRTP master salts mso and msa and SRTP master keys mko and mka are taken fro
 
 <section anchor='iana' title='IANA Considerations'>
 <t>
-Create a new registry, titled Security Description SDESCMIX, initially populated with HMAC-SHA-384 and HMAC-SHA-512.  This registry can be extended via <xref target="RFC5226">Standards Action</xref>, and it MUST provide the name of the MAC function as described in the grammar for mac-ext in <xref target='sdp-crypto-mix'/>. </t>
+IANA will create a new registry titled, "Security Description CRYPTO-MIX", initially populated with HMAC-SHA-384 and HMAC-SHA-512.  This registry can be extended via <xref target="RFC5226">Standards Action</xref>, and it MUST provide the name of the MAC function as described in the grammar for mac-ext in <xref target='sdp-crypto-mix'/>. </t>
 
 </section>
 

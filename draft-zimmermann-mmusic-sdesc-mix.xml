@@ -161,6 +161,12 @@ IANA will create a new registry titled, "Security Description CRYPTO-MIX", initi
 
 </section>
 
+<section anchor='acknowledgements' title='Acknowledgements'>
+<t>
+We would like to thank Janis Narbuts and Werner Dittmann for their helpful comments and suggestions as the first implementors of this protocol extension. </t>
+
+</section>
+
 </middle>
 
 <back>

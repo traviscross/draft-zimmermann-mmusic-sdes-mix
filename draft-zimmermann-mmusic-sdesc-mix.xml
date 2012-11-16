@@ -55,7 +55,7 @@ This document defines a method by which endpoints using SDP Security Description
 <middle>
 <section anchor='intro' title="Introduction">
 <t>
-When a SIP user agent makes a call via a SIP proxy, that proxy may send the user agent's INVITE to one or more endpoints that do not successfully answer the call because of <xref target='RFC5479'>SIP forking</xref> and <xref target='RFC5479'>SIP retargeting</xref>.  Despite not being a party to the final media session, these endpoints will have received the full SDP offer.  When the SDP offer contains non-public key information, as it does when using <xref target='RFC4568'>SDP Security Descriptions</xref>, this may result in an attacker acquiring useful key material. </t>
+When a SIP user agent makes a call via a SIP proxy, that proxy may send the user agent's INVITE to one or more endpoints that do not successfully answer the call because of <xref target='RFC5479'>SIP forking</xref> and <xref target='RFC5479'>SIP retargeting</xref>.  Despite not being a party to the final media session, these endpoints will have received the full SDP offer.  When the SDP offer contains non-public key information, as it does when using <xref target='RFC4568'>SDP Security Descriptions</xref> to negotiate keys for <xref target="RFC3711">SRTP</xref>, this may result in an attacker acquiring useful key material. </t>
 <t>
 In this document, we propose a method for mitigating this attack vector for user agents unable to migrate to key negotiation protocols with better security guarantees such as <xref target='RFC6189'>ZRTP</xref> or <xref target='RFC4347'>DTLS</xref>. </t>
 <t>
@@ -118,32 +118,34 @@ If the offer does not contain a crypto-mix attribute or contains a crypto-mix at
 
 <section anchor='kdf' title='Enhanced SDP Security Descriptions Key Derivation'>
 <t>
-To calculate new SDP Security Descriptions parameters for a media session, we proceed as follows using the extract-and-expand construct defined in <xref target="RFC5869"/>. </t>
+To derive new <xref target="RFC4568">SDP Security Descriptions</xref> parameters for a media session, we proceed as follows using the extract-and-expand construct defined in <xref target="RFC5869"/>. </t>
 
 <figure><artwork><![CDATA[
-  salt = srtpmsi || srtpmsr
-  ikm = len(srtpmki):4 || srtpmki || len(srtpmkr):4 || srtpmkr
-  prk = MAC(salt, ikm)
+  salt = mso || msa
+  ikm  = mko || mka
+  prk  = MAC(salt, ikm)
 
-  srtpmsi2 = MAC(prk,             0x01) :len(srtpmsi)
-  srtpmki2 = MAC(prk, srtpmsi2 || 0x02) :len(srtpmki)
-  srtpmsr2 = MAC(prk, srtpmki2 || 0x03) :len(srtpmsr)
-  srtpmkr2 = MAC(prk, srtpmsr2 || 0x04) :len(srtpmkr)
+  mso_f = MAC(prk,          0x01) :len(mso)
+  mko_f = MAC(prk, mso_f || 0x02) :len(mko)
+  msa_f = MAC(prk, mko_f || 0x03) :len(msa)
+  mka_f = MAC(prk, msa_f || 0x04) :len(mka)
 ]]></artwork></figure>
 <t>
 where:
 <list style="empty">
-<t>MAC is the MAC function negotiated in <xref target='negotiation'/>; </t>
-<t>srtpmsi is the SIP initiator's SRTP master salt; </t>
-<t>srtpmki is the SIP initiator's SRTP master key; </t>
-<t>srtpmsr is the SIP responder's SRTP master salt; </t>
-<t>srtpmkr is the SIP responder's SRTP master key; </t>
+<t>MAC is the negotiated MAC function from <xref target='negotiation'/>; </t>
+<t>mso is the SRTP master salt from the SDP offer; </t>
+<t>mko is the SRTP master key from the SDP offer; </t>
+<t>msa is the SRTP master salt from the SDP answer; </t>
+<t>mka is the SRTP master key from the SDP answer; </t>
+<t>mso_f is the offerer's final SRTP master salt for encryption; </t>
+<t>mko_f is the offerer's final SRTP master key for encryption; </t>
+<t>msa_f is the answerer's final SRTP master salt for encryption; </t>
+<t>mka_f is the answerer's final SRTP master key for encryption; </t>
 <t>the lengths of the keys are encoded in 4 octets in network byte order and the constant values are encoded in a single octet. </t>
 </list></t>
 <t>
-The output of the MAC will be truncated as described below.  The parameters srtpmki and srtpmsi are extracted from the SDP Security Descriptions crypto attribute transmitted by the SIP initiator, while srtpmkr and srtpmsr are extracted from the SDP Security Descriptions transmitted by the SIP responder.  The length of the SRTP master salts are defined as 112 bits (14 octets) in <xref target="RFC3711"/>.  The old values for srtpmki, srtpmkr, srtpmsi, srtpmsr, are all respectively replaced by the new values srtpmki2, srtpmkr2, srtpmsi2, and srtpmsr2.  The MAC output is truncated to 14 octets for srtpmsi2 and srtpmsr2, and to the corresponding original key lengths for srtpmki2 and srtpmkr2. </t>
-<t>
-The original crypto suite selected by SDP Security Descriptions remains unchanged, including the block cipher algorithm, the key lengths, and the SRTP auth tag sizes and auth tag algorithms. </t>
+The SRTP master salts mso and msa and SRTP master keys mko and mka are taken from the selected <xref target="RFC4568">SDP Security Descriptions</xref> crypto attribute in the SDP offer and answer.  When performing <xref target="RFC3711">SRTP</xref>, the offerer MUST use mso_f as the master salt and mko_f as the master key, and the answerer must use msa_f as the master salt and mka_f as the master key. </t>
 
 </section>
 

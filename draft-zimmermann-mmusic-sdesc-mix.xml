@@ -85,12 +85,12 @@ We denote encoding length in octets with :n where n is an integer.  If a field i
 This extension to <xref target="RFC4568">SDP Security Descriptions</xref> requires support from both endpoints negotiating a session.  We define the "SDP Security Descriptions Mix" (crypto-mix) <xref target="RFC4566">SDP media attribute</xref> to allow the endpoints to signal their support for this extension and to negotiate a MAC function for use in the KDF of <xref target='kdf'/>. </t>
 <t>
 The formal ABNF grammer for the crypto-mix attribute is defined as: </t>
-<figure><artwork>
-"a=crypto-mix:" *WSP mac *("|" mac)
+<figure><artwork><![CDATA[
+  "a=crypto-mix:" *WSP mac *("|" mac)
 
-mac = "HMAC-SHA-384" / "HMAC-SHA-512" / mac-ext
-mac-ext = 1*(%x21-7B / %x7D-7E) ; printing chars except pipe
-</artwork></figure>
+  mac = "HMAC-SHA-384" / "HMAC-SHA-512" / mac-ext
+  mac-ext = 1*(%x21-7B / %x7D-7E) ; printing chars except pipe
+]]></artwork></figure>
 <t>
 where WSP is defined in <xref target="RFC4234"/>.</t>
 <t>
@@ -118,7 +118,7 @@ If the offer does not contain an crypto-mix attribute in an SDP media descriptio
 <t>
 To calculate new SDP Security Descriptions parameters for a media session, we proceed as follows using the extract-and-expand construct defined in <xref target="RFC5869"/>. </t>
 
-<figure><artwork>
+<figure><artwork><![CDATA[
   salt = srtpmsi || srtpmsr
   ikm = len(srtpmki):4 || srtpmki || len(srtpmkr):4 || srtpmkr
   prk = MAC(salt, ikm)
@@ -128,7 +128,7 @@ To calculate new SDP Security Descriptions parameters for a media session, we pr
   srtpmsr2 = MAC(prk, srtpmki2 || 0x03) :len(srtpmsr)
   srtpmkr2 = MAC(prk, srtpmsr2 || 0x04) :len(srtpmkr)
 
-</artwork></figure>
+]]></artwork></figure>
 <t>
 where:
 <list style="empty">

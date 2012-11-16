@@ -118,6 +118,8 @@ If the offer does not contain a crypto-mix attribute or contains a crypto-mix at
 
 <section anchor='kdf' title='Enhanced SDP Security Descriptions Key Derivation'>
 <t>
+In this section we define offer and answer as in <xref target='negotiation'/>. </t>
+<t>
 To derive new <xref target="RFC4568">SDP Security Descriptions</xref> parameters for a media session, we proceed as follows using the extract-and-expand construct defined in <xref target="RFC5869"/>. </t>
 
 <figure><artwork><![CDATA[
@@ -139,17 +141,17 @@ To derive new <xref target="RFC4568">SDP Security Descriptions</xref> parameters
 where:
 <list style="empty">
 <t>MAC is the negotiated MAC function from <xref target='negotiation'/>; </t>
-<t>mso is the SRTP master salt from the SDP offer; </t>
-<t>mko is the SRTP master key from the SDP offer; </t>
-<t>msa is the SRTP master salt from the SDP answer; </t>
-<t>mka is the SRTP master key from the SDP answer; </t>
+<t>mso is the SRTP master salt from the offer; </t>
+<t>mko is the SRTP master key from the offer; </t>
+<t>msa is the SRTP master salt from the answer; </t>
+<t>mka is the SRTP master key from the answer; </t>
 <t>mso_f is the offerer's final SRTP master salt; </t>
 <t>mko_f is the offerer's final SRTP master key; </t>
 <t>msa_f is the answerer's final SRTP master salt; </t>
 <t>mka_f is the answerer's final SRTP master key; </t>
 </list></t>
 <t>
-The SRTP master salts mso and msa and SRTP master keys mko and mka are taken from the selected <xref target="RFC4568">SDP Security Descriptions</xref> crypto attributes in the SDP offer and answer.  When performing <xref target="RFC3711">SRTP</xref> operations, both endpoints MUST treat mso_f and mko_f as they had been the master salt and master key, respectively, in the offer and msa_f and mka_f as if they had been the master salt and master key, respectively, in the answer. </t>
+The SRTP master salts mso and msa and SRTP master keys mko and mka are taken from the selected <xref target="RFC4568">SDP Security Descriptions</xref> crypto attributes in the offer and answer.  When performing <xref target="RFC3711">SRTP</xref> operations, both endpoints MUST treat mso_f and mko_f as they had been the master salt and master key, respectively, in the offer and msa_f and mka_f as if they had been the master salt and master key, respectively, in the answer. </t>
 
 </section>
 

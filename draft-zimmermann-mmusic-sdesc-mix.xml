@@ -125,10 +125,10 @@ To derive new <xref target="RFC4568">SDP Security Descriptions</xref> parameters
   ikm  = mko || mka
   prk  = MAC(salt, ikm)
 
-  mso_f = MAC(prk,          0x01) :len(mso)
-  mko_f = MAC(prk, mso_f || 0x02) :len(mko)
-  msa_f = MAC(prk, mko_f || 0x03) :len(msa)
-  mka_f = MAC(prk, msa_f || 0x04) :len(mka)
+  mso_f = MAC(prk,          0x01:8) :len(mso)
+  mko_f = MAC(prk, mso_f || 0x02:8) :len(mko)
+  msa_f = MAC(prk, mko_f || 0x03:8) :len(msa)
+  mka_f = MAC(prk, msa_f || 0x04:8) :len(mka)
 ]]></artwork></figure>
 <t>
 where:

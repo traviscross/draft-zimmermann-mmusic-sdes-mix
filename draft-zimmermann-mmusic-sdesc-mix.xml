@@ -55,7 +55,7 @@ This document defines a method by which endpoints using SDP Security Description
 <middle>
 <section anchor='intro' title="Introduction">
 <t>
-When a SIP user agent makes a call via a SIP proxy, that proxy may send the user agent's INVITE to one or more endpoints that do not successfully answer the call because of <xref target='RFC5479'>SIP forking</xref> and <xref target='RFC5479'>SIP retargeting</xref>.  Despite not being a party to the final media session, these endpoints will have received the full SDP offer.  When the SDP offer contains non-public key information, as it does when using <xref target='RFC4568'>SDP Security Descriptions</xref> to negotiate keys for <xref target="RFC3711">SRTP</xref>, this may result in an attacker acquiring useful key material. </t>
+When a SIP user agent makes a call via a SIP proxy, that proxy may send the user agent's INVITE to one or more endpoints that do not successfully answer the call because of <xref target='RFC5479'>SIP forking</xref> and <xref target='RFC5479'>SIP retargeting</xref>.  Despite not being a party to the final media session, these endpoints will have received the caller's full SDP offer.  When the SDP offer contains non-public key information, as it does when using <xref target='RFC4568'>SDP Security Descriptions</xref> to negotiate keys for <xref target="RFC3711">SRTP</xref>, this may result in an attacker acquiring useful key material. </t>
 <t>
 In this document, we propose a method for mitigating this attack vector for user agents unable to migrate to key negotiation protocols with better security guarantees such as <xref target='RFC6189'>ZRTP</xref> or <xref target='RFC4347'>DTLS</xref>. </t>
 <t>

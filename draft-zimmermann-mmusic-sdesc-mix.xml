@@ -149,7 +149,7 @@ where:
 <t>mka_f is the answerer's final SRTP master key; </t>
 </list></t>
 <t>
-The SRTP master salts mso and msa and SRTP master keys mko and mka are taken from the selected <xref target="RFC4568">SDP Security Descriptions</xref> crypto attributes in the SDP offer and answer.  When performing <xref target="RFC3711">SRTP</xref> operations, the offerer MUST use mso_f as the master salt and mko_f as the master key, and the answerer must use msa_f as the master salt and mka_f as the master key. </t>
+The SRTP master salts mso and msa and SRTP master keys mko and mka are taken from the selected <xref target="RFC4568">SDP Security Descriptions</xref> crypto attributes in the SDP offer and answer.  When performing <xref target="RFC3711">SRTP</xref> operations, both endpoints MUST treat mso_f and mko_f as they had been the master salt and master key, respectively, in the offer and msa_f and mka_f as if they had been the master salt and master key, respectively, in the answer. </t>
 
 </section>
 

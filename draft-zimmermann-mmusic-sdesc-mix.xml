@@ -82,9 +82,9 @@ We denote encoding length in octets with :n where n is an integer.  If a field i
 
 </section>
 
-<section anchor='sdp-crypto-mix' title='SDP "SDP Security Descriptions Mix" Attribute and Parameters'>
+<section anchor='sdp-crypto-mix' title='SDP "crypto-mix" Attribute and Parameters'>
 <t>
-This extension to <xref target="RFC4568">SDP Security Descriptions</xref> requires support from both endpoints negotiating a session.  We define the "SDP Security Descriptions Mix" (crypto-mix) <xref target="RFC4566">SDP media attribute</xref> to allow the endpoints to signal their support for this extension and to negotiate a MAC function for use in the KDF of <xref target='kdf'/>. </t>
+This extension to <xref target="RFC4568">SDP Security Descriptions</xref> requires support from both endpoints negotiating a session.  We define the "crypto-mix" <xref target="RFC4566">SDP media attribute</xref> to allow the endpoints to signal their support for this extension and to negotiate a MAC function for use in the KDF of <xref target='kdf'/>. </t>
 <t>
 The formal ABNF grammer for the crypto-mix attribute is defined as: </t>
 <figure><artwork><![CDATA[

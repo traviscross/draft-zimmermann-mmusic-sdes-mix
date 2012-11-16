@@ -127,7 +127,6 @@ To calculate new SDP Security Descriptions parameters for a media session, we pr
   srtpmki2 = MAC(prk, srtpmsi2 || 0x02) :len(srtpmki)
   srtpmsr2 = MAC(prk, srtpmki2 || 0x03) :len(srtpmsr)
   srtpmkr2 = MAC(prk, srtpmsr2 || 0x04) :len(srtpmkr)
-
 ]]></artwork></figure>
 <t>
 where:

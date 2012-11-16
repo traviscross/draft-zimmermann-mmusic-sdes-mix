@@ -158,6 +158,7 @@ Create a new registry, titled Security Description SDESCMIX, initially populated
 <references title="Normative References">
 <?rfc include="reference.RFC.2104" ?><!-- HMAC -->
 <?rfc include="reference.RFC.2119" ?><!-- RFC Keywords -->
+<?rfc include="reference.RFC.3261" ?><!-- SIP -->
 <?rfc include="reference.RFC.3711" ?><!-- SRTP -->
 <?rfc include="reference.RFC.4234" ?><!-- ABNF -->
 <?rfc include="reference.RFC.4566" ?><!-- SDP -->
@@ -168,7 +169,6 @@ Create a new registry, titled Security Description SDESCMIX, initially populated
 </references>
 
 <references title="Informative References">
-<?rfc include="reference.RFC.3261" ?><!-- SIP -->
 <!--<rfc include="reference.RFC.4086" />--><!-- Randomness Requirements for Security -->
 <?rfc include="reference.RFC.4347" ?><!-- DTLS -->
 <!--<rfc include="reference.RFC.4474" />--><!-- SIP Authenticated Identity -->

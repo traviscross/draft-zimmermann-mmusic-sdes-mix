@@ -5,6 +5,8 @@ OUTPUTS=$(NAME).txt $(NAME).html $(NAME).nr $(NAME).txt.pdf $(NAME).html.epub $(
 
 all: all-docs bundle
 
+fast: $(NAME).html $(NAME).txt
+
 all-docs: $(OUTPUTS)
 
 bundle: $(NAME).tar.gz

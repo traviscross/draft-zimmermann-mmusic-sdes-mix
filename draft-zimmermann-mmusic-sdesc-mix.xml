@@ -5,7 +5,7 @@
 <?rfc tocdepth="5"?>
 <?rfc rfcedstyle="yes"?>
 <?rfc subcompact="no"?>
-<rfc ipr="trust200902" category="std" docName="draft-zimmermann-mmusic-sdesc-mix-00">
+<rfc ipr="trust200902" category="std" docName="draft-zimmermann-mmusic-sdesc-mix-00" updates="4568">
 <front>
 <title abbrev="SDESC Mix">Key Mixing Extension for SDP Security Descriptions</title>
 

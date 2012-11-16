@@ -59,7 +59,7 @@ When a SIP user agent makes a call via a SIP proxy, that proxy may send the user
 <t>
 In this document, we propose a method for mitigating this attack vector for user agents unable to migrate to key negotiation protocols with better security guarantees such as <xref target='RFC6189'>ZRTP</xref> or <xref target='RFC4347'>DTLS</xref>. </t>
 <t>
-Our method relies on the relative difficulty for the attacker of obtaining the SDP answer.  When a user agent provides its SDP answer, this answer will be routed back to the UAC without invoking <xref target='RFC5479'>SIP forking</xref> or <xref target='RFC5479'>retargeting</xref> behaviors. </t>
+Our method relies on the relative difficulty for the attacker of obtaining the SDP answer.  When a user agent provides its SDP answer, this answer is routed back to the UAC without invoking <xref target='RFC5479'>SIP forking</xref> or <xref target='RFC5479'>retargeting</xref> behaviors. </t>
 <t>
 By combining the offerer's key and the answer's key using a cryptographically strong function we can <xref target='RFC5869'>extract</xref> a new pseudo-random key (PRK) known only to parties who possess both keys.  We can then <xref target='RFC5869'>expand</xref> this PRK to create new secret keys for both endpoints. </t>
 </section>

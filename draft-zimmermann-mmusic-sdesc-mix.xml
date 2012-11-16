@@ -61,7 +61,7 @@ In this document we propose a method for mitigating this attack vector for user 
 <t>
 Our method relies on the relative difficulty for the attacker of obtaining the SDP answer.  When a user agent provides its SDP answer, this answer is routed back to the UAC without invoking <xref target='RFC5479'>SIP forking</xref> or <xref target='RFC5479'>retargeting</xref> behaviors. </t>
 <t>
-By combining the offerer's key and the answer's key using a cryptographically strong function we can <xref target='RFC5869'>extract</xref> a new pseudo-random key (PRK) known only to parties who possess both keys.  We can then <xref target='RFC5869'>expand</xref> this PRK to create new secret keys for both endpoints. </t>
+By combining the offerer's key and the answerer's key using a cryptographically strong function we can <xref target='RFC5869'>extract</xref> a new pseudo-random key (PRK) known only to parties who possess both keys.  We can then <xref target='RFC5869'>expand</xref> this PRK to create new secret keys for both endpoints. </t>
 <t>
 Despite our illustrative references in this document to <xref target='RFC3261'>SIP</xref>, the vulnerability described applies widely to any session setup protocol that both provides forking or retargeting mechanisms and uses <xref target='RFC4568'>SDP Security Descriptions</xref>.  Similarly, the mitigation mechanism we propose can be used with any protocol that uses <xref target='RFC4566'>SDP</xref> and <xref target='RFC4568'>SDP Security Descriptions</xref>. </t>
 </section>

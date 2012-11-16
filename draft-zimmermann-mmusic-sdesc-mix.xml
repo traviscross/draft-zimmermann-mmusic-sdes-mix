@@ -68,7 +68,7 @@ By combining the offerer's key and the answer's key using a cryptographically st
 <t>
 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in <xref target="RFC2119"/>. </t>
 <t>
-Throughout this document we use terminology and acronyms defined in Section 6 of <xref target='RFC3261'/>.</t>
+Throughout this document we use terminology and acronyms defined in Section 6 of <xref target='RFC3261'/>. </t>
 <t>
 We represent all fields in network-byte order and denote concatenation with ||.  If we say C = A || B, then the first byte of A forms the most significant byte of C. </t>
 <t>
@@ -76,7 +76,7 @@ We denote hexidecimal constants with the prefix 0x.  Such a constant is encoded 
 <t>
 If b is a sequence of bytes, len(b) denotes the length of b in octets. </t>
 <t>
-We denote encoding length in octets with :n where n is an integer.  If a field is longer than n then it is truncated from the right until n octets remain.  If a field is shorter than n, it is padded on the left with zeros.  e.g. 0x01:4 is the integer 1 represented in a 32-bit big-endian field, and len(b):1 is the length of b in octets encoded in a single 8-bit byte.</t>
+We denote encoding length in octets with :n where n is an integer.  If a field is longer than n then it is truncated from the right until n octets remain.  If a field is shorter than n, it is padded on the left with zeros.  e.g. 0x01:4 is the integer 1 represented in a 32-bit big-endian field, and len(b):1 is the length of b in octets encoded in a single 8-bit byte. </t>
 
 </section>
 
@@ -92,9 +92,9 @@ The formal ABNF grammer for the crypto-mix attribute is defined as: </t>
   mac-ext = 1*(%x21-7B / %x7D-7E) ; printing chars except pipe
 ]]></artwork></figure>
 <t>
-where WSP is defined in <xref target="RFC4234"/>.</t>
+where WSP is defined in <xref target="RFC4234"/>. </t>
 <t>
-This attribute MUST only be placed at the SDP media description level and MUST NOT be placed at the SDP session description level.</t>
+This attribute MUST only be placed at the SDP media description level and MUST NOT be placed at the SDP session description level. </t>
 <t>
 The values of mac have the meaning defined in <xref target="RFC2104"/> and <xref target="RFC4634"/>.  Values for mac-ext can be standarized as described in <xref target='iana'/>. </t>
 
@@ -102,13 +102,13 @@ The values of mac have the meaning defined in <xref target="RFC2104"/> and <xref
 
 <section anchor='negotiation' title='SDP Negotiation'>
 <t>
-An SDP offer or answer may contain multiple media descriptions.  In this section, we consider each media description separately and individually.</t>
+An SDP offer or answer may contain multiple media descriptions.  In this section, we consider each media description separately and individually. </t>
 <t>
 When generating its offer, an endpoint MAY include in a media description the crypto-mix attribute defined in <xref target="sdp-crypto-mix"/>.  If included, the endpoint SHOULD list every MAC function that the endpoint supports.  An endpoint MUST at a minimum support HMAC-SHA-384. </t>
 <t>
 Upon receiving a media description from the offer, an endpoint MUST reply with the crypto-mix attribute if that media description offer includes an crypto-mix attribute AND the endpoint supports at least one of the MAC functions offered.  The endpoint MUST choose one of the offered MAC functions and place that one (and only that one) MAC function in the crypto-mix attribute of its answer for that media description.  An endpoint may use any local policy to select from among the MAC functions offered to it.  The answering endpoint now commits to using the negotiated MAC function for the processing in <xref target='kdf'/> for the SDP Security Descriptions crypto attribute (if any) it chose in its answer and MUST process the SDP Security Descriptions parameters with this extension. </t>
 <t>
-Upon receiving a media description in the answer, an endpoint MUST process any SDP Security Descriptions parameters as defined in <xref target='kdf'/> if the media description includes the crypto-mix attribute.  The single MAC function included in the answer is the negotiated MAC function.</t>
+Upon receiving a media description in the answer, an endpoint MUST process any SDP Security Descriptions parameters as defined in <xref target='kdf'/> if the media description includes the crypto-mix attribute.  The single MAC function included in the answer is the negotiated MAC function. </t>
 <t>
 If the offer does not contain an crypto-mix attribute in an SDP media description, an endpoint MUST NOT include the crypto-mix attribute in its answer for that media description.  If an offer or an answer does not contain an crypto-mix attribute in an SDP media description, an endpoint MUST NOT perform the <xref target='kdf'/> processing for any SDP Security Descriptions keys contained in that media description. </t>
 
@@ -141,7 +141,7 @@ where:
 <t>
 The output of the MAC will be truncated as described below.  The parameters srtpmki and srtpmsi are extracted from the SDP Security Descriptions crypto attribute transmitted by the SIP initiator, while srtpmkr and srtpmsr are extracted from the SDP Security Descriptions transmitted by the SIP responder.  The length of the SRTP master salts are defined as 112 bits (14 octets) in <xref target="RFC3711"/>.  The old values for srtpmki, srtpmkr, srtpmsi, srtpmsr, are all respectively replaced by the new values srtpmki2, srtpmkr2, srtpmsi2, and srtpmsr2.  The MAC output is truncated to 14 octets for srtpmsi2 and srtpmsr2, and to the corresponding original key lengths for srtpmki2 and srtpmkr2. </t>
 <t>
-The original crypto suite selected by SDP Security Descriptions remains unchanged, including the block cipher algorithm, the key lengths, and the SRTP auth tag sizes and auth tag algorithms.  </t>
+The original crypto suite selected by SDP Security Descriptions remains unchanged, including the block cipher algorithm, the key lengths, and the SRTP auth tag sizes and auth tag algorithms. </t>
 
 </section>
 

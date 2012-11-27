@@ -154,7 +154,7 @@ To derive new <xref target="RFC4568">SDP Security Descriptions</xref> parameters
   salt = mso || msa
   ikm  = mko || mka
   prk  = MAC(salt, ikm)
-  L = len(salt)+len(ikm)
+  L = len(salt || ikm)
   T = expand(prk, L)
 
   mso_f = (T |+ 0)       :len(mso)

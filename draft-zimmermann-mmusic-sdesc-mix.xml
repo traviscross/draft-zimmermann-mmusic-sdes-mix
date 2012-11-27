@@ -96,7 +96,7 @@ If b is a sequence of bits, len(b) denotes the length of b in bits. </t>
 <t>
 We denote encoding length in bits with :n where n is an integer.  If a field is longer than n then it is truncated from the right until n bits remain.  If a field is shorter than n, it is padded on the left with zeros.  e.g. 0x01:32 is the integer 1 represented in a 32-bit (4-octet) big-endian field, and len(b):8 is the length of b in bits encoded in a single 8-bit byte. </t>
 <t>
-The sequence of bits contained within another sequence of bits (X) and offset from the base of that second sequence by some integer number of bits (n) is represented as X :+ n.  e.g. X :+ 8 represents the sequence of bits from the ninth bit in the field of X. </t>
+A sequence of bits Xn contained within a second sequence of bits Xb and offset from the base of that second sequence by some integer number of bits n is represented as Xn = Xb :+ n.  e.g. X :+ 8 represents the sequence of bits starting at the ninth bit in the field of X. </t>
 
 </section>
 

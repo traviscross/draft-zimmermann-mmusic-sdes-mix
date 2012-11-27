@@ -158,21 +158,21 @@ To derive new <xref target="RFC4568">SDP Security Descriptions</xref> parameters
   T = expand(prk, L)
 
   mso_f = (T |+ 0)       :len(mso)
-  mko_f = (T |+ len(mso)):len(mko)
-  msa_f = (T |+ len(mko)):len(msa)
-  mka_f = (T |+ len(msa)):len(mka)
+  msa_f = (T |+ len(mso)):len(msa)
+  mko_f = (T |+ len(msa)):len(mko)
+  mka_f = (T |+ len(mko)):len(mka)
 ]]></artwork></figure>
 <t>
 where:
 <list style="empty">
 <t>MAC is the negotiated MAC function from <xref target='negotiation'/>; </t>
 <t>mso is the SRTP master salt from the offer; </t>
-<t>mko is the SRTP master key from the offer; </t>
 <t>msa is the SRTP master salt from the answer; </t>
+<t>mko is the SRTP master key from the offer; </t>
 <t>mka is the SRTP master key from the answer; </t>
 <t>mso_f is the offerer's final SRTP master salt; </t>
-<t>mko_f is the offerer's final SRTP master key; </t>
 <t>msa_f is the answerer's final SRTP master salt; </t>
+<t>mko_f is the offerer's final SRTP master key; </t>
 <t>mka_f is the answerer's final SRTP master key. </t>
 </list></t>
 <t>

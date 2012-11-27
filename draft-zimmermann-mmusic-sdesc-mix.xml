@@ -142,7 +142,7 @@ To derive new <xref target="RFC4568">SDP Security Descriptions</xref> parameters
 
 <figure><artwork><![CDATA[
   expand(prk, L) =
-    h    = len(MAC(x,y)) ; where x,y are any two values
+    h    = len(MAC(_,_)) ; where _ is any value
     n    = ceiling(L/h)  ; least integer greater than L/h
     t(0) = ""            ; 0-bit empty string
     T    = t(0)

@@ -144,10 +144,11 @@ To derive new <xref target="RFC4568">SDP Security Descriptions</xref> parameters
   expand(prk, L) =
     h    = len(MAC(_,_)) ; where _ is any value
     n    = ceiling(L/h)  ; least integer greater than L/h
+    c    = "CRYPTO-MIX-EXPAND" || 0x00:8 || L:32
     t(0) = ""            ; 0-bit empty string
     T    = t(0)
     for i from 1 to n inclusive
-      t(i) = MAC(prk, t(i-1) || i:8)
+      t(i) = MAC(prk, t(i-1) || i:8 || c)
       T    = T || t(i)
     return T:L
 
